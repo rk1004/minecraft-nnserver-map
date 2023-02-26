@@ -86,17 +86,36 @@ canvas.addEventListener('mouseout', function(){press = false;});
 canvas.addEventListener('mousemove', mouseMove);
 
 const items = [];
-const getPos = (min, max) => {
-    return Math.round(Math.random() * (max + 1 - min) + min);
-};
 
 function init(){
-    items.push(new Box(-300, 0, objSize, "天空トラップタワー"));
-    items.push(new Box(54, -41, objSize, "周辺地図"));
-    items.push(new Box(-195, -690, objSize, "農民(小麦20:エメラルド1)"));
-    items.push(new Box(0, -135, objSize, "交易場（耐久力Ⅲ:エメラルド１個, 修繕:エメラルド14, シルクタッチ:エメラルド7, 無限:エメラルド6,水中作業:エメラルド5, アイテムボーナスⅢ（ドロップ増加Ⅲ）:エメラルド11, 幸運Ⅲ:エメラルド12, 火属性Ⅱ:エメラルド１個m 防護Ⅳ（ダメージ軽減Ⅳ）:エメラルド16個, 効率V:エメラルド20個）"));
-    items.push(new Box(-140, -319, objSize, "ゾンビトラップ"));
-    items.push(new Box(30, -80, objSize, "ネザーゲート"));
+    // CSVファイルを取得
+    let csv = new XMLHttpRequest();
+    
+    // CSVファイルへのパス
+    csv.open("GET", "locations.csv", false);
+
+    // csvファイル読み込み失敗時のエラー対応
+    try {
+        csv.send(null);
+    } catch (err) {
+        console.log(err);
+    }
+
+    // 改行ごとに配列化
+    let lines = csv.responseText.split(/\r\n|\n/);
+ 
+    // 1行ごとに処理
+    for (let i = 0; i < lines.length; ++i) {
+        let cells = lines[i].split(",");
+        items.push(new Box(cells[0], cells[1], objSize, cells[2]));
+    }
+
+    //items.push(new Box(-300, 0, objSize, "天空トラップタワー"));
+    //items.push(new Box(54, -41, objSize, "周辺地図"));
+    //items.push(new Box(-195, -690, objSize, "農民(小麦20:エメラルド1)"));
+    //items.push(new Box(0, -135, objSize, "交易場（耐久力Ⅲ:エメラルド１個, 修繕:エメラルド14, シルクタッチ:エメラルド7, 無限:エメラルド6,水中作業:エメラルド5, アイテムボーナスⅢ（ドロップ増加Ⅲ）:エメラルド11, 幸運Ⅲ:エメラルド12, 火属性Ⅱ:エメラルド１個m 防護Ⅳ（ダメージ軽減Ⅳ）:エメラルド16個, 効率V:エメラルド20個）"));
+    //items.push(new Box(-140, -319, objSize, "ゾンビトラップ"));
+    //items.push(new Box(30, -80, objSize, "ネザーゲート"));
 }
 
 
