@@ -51,10 +51,17 @@ class Box extends BaseObject {
         this.w = size;
         this.h = size;
         this.description = description;
+        this.hitted = false;
     }
   
     draw(ctx) {
         ctx.save();
+        if(this.hitted){
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(this.x-zoomLeft+centerX-3, this.y-zoomTop+centerY-3, this.w+6, this.h+6)
+        }
+        
         ctx.fillStyle = "red";
         ctx.fillRect(this.x-zoomLeft+centerX, this.y-zoomTop+centerY, this.w, this.h); 
         ctx.restore();
@@ -62,11 +69,10 @@ class Box extends BaseObject {
   
     
     clicked(ctx) {
-        text_description.textContent = this.description;
     }
   
     hit(px, py) {
-        return (this.x <= px && px <= this.x + this.w) && (this.y <= py && py <= this.y + this.h);
+        this.hitted = (this.x <= px && px <= this.x + this.w) && (this.y <= py && py <= this.y + this.h);
     }
 } 
 
@@ -250,8 +256,9 @@ window.addEventListener( "DOMContentLoaded" , ()=> {
 
 
         items.forEach(item => {
-            if (item.hit(canvasX, canvasY)) {
-                item.clicked(ctx);
+            item.hit(canvasX, canvasY);
+            if(item.hitted){
+                text_description.textContent = item.description;
             }
         });
 
